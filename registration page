@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBT Diabetes Study — Registration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+  :root {
+    --deep-teal:#0f4c5c; --teal:#1a7a8a; --light-teal:#e0f4f7;
+    --saffron:#e67e22; --success:#27ae60; --off-white:#f8fbfc;
+    --text-main:#1a2e35; --text-soft:#4a6670; --border:#c8e6ea;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter','Noto Sans Devanagari',sans-serif; background:var(--off-white); color:var(--text-main); min-height:100vh; }
+  header { background:linear-gradient(135deg,#0f4c5c,#1a7a8a 60%,#2e86ab); color:#fff; padding:24px 20px; text-align:center; }
+  header h1 { font-size:clamp(15px,4vw,20px); margin-bottom:6px; }
+  header p { font-size:12px; opacity:.8; }
+  main { max-width:520px; margin:0 auto; padding:20px 16px 60px; }
+  .card { background:#fff; border:1px solid var(--border); border-radius:14px; padding:22px; margin-top:18px; }
+  .card h2 { font-size:16px; color:var(--deep-teal); margin-bottom:14px; }
+  label { display:block; font-size:13px; font-weight:600; margin:12px 0 6px; }
+  input, select { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; font-family:inherit; }
+  input:focus, select:focus { outline:none; border-color:var(--teal); }
+  .btn { display:block; width:100%; margin-top:20px; background:linear-gradient(135deg,var(--deep-teal),var(--teal)); color:#fff; border:none; border-radius:30px; padding:14px; font-size:15px; font-weight:700; cursor:pointer; }
+  .btn:disabled { opacity:.6; }
+  .btn-secondary { background:linear-gradient(135deg,var(--saffron),#f39c12); margin-top:10px; }
+  .id-display { background:var(--light-teal); border:2px dashed var(--teal); border-radius:12px; padding:20px; text-align:center; margin-top:16px; display:none; }
+  .id-display .pid { font-size:28px; font-weight:800; color:var(--deep-teal); letter-spacing:1px; }
+  .id-display .lbl { font-size:12px; color:var(--text-soft); margin-top:4px; }
+  .msg { font-size:13px; padding:10px; border-radius:8px; margin-top:12px; display:none; }
+  .msg.error { background:#fdecea; color:#c0392b; display:block; }
+  .msg.success { background:#eafaf1; color:#1e8449; display:block; }
+  .actions { margin-top:20px; display:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Effectiveness of Mobile Based Teaching (MBT)<br>on Prevention of Diabetes Complications</h1>
+  <p>College of Nursing, AHB — Participant Registration</p>
+</header>
+
+<main>
+  <div class="card" id="reg-card">
+    <h2>📋 New Participant Registration</h2>
+    <div id="reg-msg" class="msg"></div>
+
+    <label>Full Name / पूरा नाम</label>
+    <input type="text" id="f-name" placeholder="Enter full name">
+
+    <label>Age / आयु</label>
+    <input type="number" id="f-age" min="1" max="120" placeholder="Age in years">
+
+    <label>Sex / लिंग</label>
+    <select id="f-sex">
+      <option value="">Select</option>
+      <option value="Male">Male / पुरुष</option>
+      <option value="Female">Female / महिला</option>
+      <option value="Other">Other / अन्य</option>
+    </select>
+
+    <label>Educational Status / शैक्षिक स्थिति</label>
+    <select id="f-education">
+      <option value="">Select</option>
+      <option value="No formal education">No formal education</option>
+      <option value="Primary">Primary</option>
+      <option value="Secondary">Secondary</option>
+      <option value="Higher Secondary">Higher Secondary</option>
+      <option value="Graduate">Graduate</option>
+      <option value="Postgraduate">Postgraduate</option>
+    </select>
+
+    <label>Relation to Diabetic Family Member / मधुमेह रोगी से संबंध</label>
+    <select id="f-relation">
+      <option value="">Select</option>
+      <option value="Spouse">Spouse</option>
+      <option value="Child">Child</option>
+      <option value="Sibling">Sibling</option>
+      <option value="Parent">Parent</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Duration Since Family Member's Diagnosis / निदान के बाद से अवधि</label>
+    <select id="f-duration">
+      <option value="">Select</option>
+      <option value="Less than 1 year">Less than 1 year</option>
+      <option value="1-5 years">1-5 years</option>
+      <option value="5-10 years">5-10 years</option>
+      <option value="More than 10 years">More than 10 years</option>
+    </select>
+
+    <label>Source of Existing Knowledge / ज्ञान का स्रोत</label>
+    <select id="f-source">
+      <option value="">Select</option>
+      <option value="Doctor/Hospital">Doctor/Hospital</option>
+      <option value="Family/Friends">Family/Friends</option>
+      <option value="Internet/Social Media">Internet/Social Media</option>
+      <option value="TV/Newspaper">TV/Newspaper</option>
+      <option value="None">None</option>
+    </select>
+
+    <button class="btn" id="btn-register" onclick="registerParticipant()">Register Participant</button>
+
+    <div class="id-display" id="id-display">
+      <div class="pid" id="pid-text">—</div>
+      <div class="lbl">Participant ID — note this down / यह लिखकर रखें</div>
+    </div>
+
+    <div class="actions" id="post-reg-actions">
+      <button class="btn btn-secondary" onclick="goToPreTest()">Start Pre-Test →</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ===== GOOGLE SHEETS WEB APP URL =====
+  // Apps Script deploy karne ke baad jo URL milega, wahi yahan paste karo.
+  const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx7vHvYPrreCoWfUCzTaMdXJK-3b64H0l9rmJTDpXjmU2modypiEHsSqPo8d5rq7F9H/exec";
+
+  let currentParticipantId = null;
+
+  window.registerParticipant = async function () {
+    const name = document.getElementById("f-name").value.trim();
+    const age = document.getElementById("f-age").value;
+    const sex = document.getElementById("f-sex").value;
+    const education = document.getElementById("f-education").value;
+    const relation = document.getElementById("f-relation").value;
+    const duration = document.getElementById("f-duration").value;
+    const source = document.getElementById("f-source").value;
+
+    const msgBox = document.getElementById("reg-msg");
+    msgBox.className = "msg";
+    msgBox.style.display = "none";
+
+    if (!name || !age || !sex || !education || !relation || !duration || !source) {
+      msgBox.textContent = "Please fill all fields / कृपया सभी फ़ील्ड भरें";
+      msgBox.className = "msg error";
+      return;
+    }
+
+    const btn = document.getElementById("btn-register");
+    btn.disabled = true;
+    btn.textContent = "Registering...";
+
+    try {
+      const response = await fetch(SHEET_WEBAPP_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "register",
+          name,
+          age: Number(age),
+          sex,
+          education,
+          relation,
+          duration,
+          source
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.result !== "success") {
+        throw new Error(result.message || "Unknown error from server");
+      }
+
+      currentParticipantId = result.participantId;
+
+      document.getElementById("pid-text").textContent = currentParticipantId;
+      document.getElementById("id-display").style.display = "block";
+      document.getElementById("post-reg-actions").style.display = "block";
+      btn.style.display = "none";
+
+      msgBox.textContent = "Registered successfully!";
+      msgBox.className = "msg success";
+
+      localStorage.setItem("currentParticipantId", currentParticipantId);
+    } catch (err) {
+      console.error(err);
+      msgBox.textContent = "Error: " + err.message + " — check your internet, or the SHEET_WEBAPP_URL setting.";
+      msgBox.className = "msg error";
+      btn.disabled = false;
+      btn.textContent = "Register Participant";
+    }
+  };
+
+  window.goToPreTest = function () {
+    window.location.href = "pretest.html?pid=" + currentParticipantId;
+  };
+</script>
+
+</body>
+</html>
