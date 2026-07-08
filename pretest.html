@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diabetes Awareness Questionnaire / मधुमेह जागरूकता प्रश्नावली</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --deep-teal: #0f4c5c;
+    --teal: #1a7a8a;
+    --light-teal: #e0f4f7;
+    --saffron: #e67e22;
+    --saffron-light: #fef4e8;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --off-white: #f8fbfc;
+    --card-bg: #ffffff;
+    --text-main: #1a2e35;
+    --text-soft: #4a6670;
+    --border: #c8e6ea;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+    background: var(--off-white);
+    color: var(--text-main);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 60%, #2e86ab 100%);
+    color: white;
+    padding: 28px 20px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: -30px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .study-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: clamp(16px, 4vw, 22px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    position: relative; z-index: 1;
+  }
+  header h2 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: clamp(14px, 3.5vw, 18px);
+    font-weight: 600;
+    opacity: 0.9;
+    position: relative; z-index: 1;
+    margin-bottom: 16px;
+  }
+  .college-tag {
+    font-size: 12px;
+    opacity: 0.75;
+    position: relative; z-index: 1;
+  }
+
+  .progress-wrap {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+  }
+  .progress-bar-bg {
+    height: 6px;
+    background: var(--light-teal);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--saffron));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .segment-nav {
+    display: flex;
+    gap: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    background: white;
+    border-bottom: 1px solid var(--border);
+  }
+  .seg-tab {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    background: var(--light-teal);
+    color: var(--deep-teal);
+  }
+  .seg-tab.active { background: var(--deep-teal); color: white; }
+  .seg-tab.done { border-color: var(--success); color: var(--success); background: #f0fff5; }
+
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  .segment-header {
+    background: linear-gradient(135deg, var(--deep-teal), var(--teal));
+    color: white;
+    border-radius: 14px 14px 0 0;
+    padding: 18px 20px 14px;
+    margin-top: 10px;
+  }
+  .segment-header .seg-num {
+    font-size: 11px;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .segment-header h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 4px 0 2px;
+  }
+  .segment-header h4 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  .q-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:hover { box-shadow: 0 4px 16px rgba(15,76,92,0.1); }
+  .q-card.answered { border-left: 4px solid var(--success); }
+
+  .q-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--deep-teal);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .q-en {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .q-hi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 14px;
+    color: var(--teal);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .multi-hint {
+    font-size: 11px;
+    color: var(--saffron);
+    font-weight: 600;
+    margin-bottom: 10px;
+    background: var(--saffron-light);
+    padding: 3px 10px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 8px; }
+
+  .opt-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+  .opt-label:hover { border-color: var(--teal); background: var(--light-teal); }
+  .opt-label input { margin-top: 2px; accent-color: var(--deep-teal); }
+  .opt-text-en { font-size: 13px; font-weight: 500; color: var(--text-main); }
+  .opt-text-hi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 2px;
+  }
+  .opt-label.selected {
+    border-color: var(--deep-teal);
+    background: var(--light-teal);
+  }
+
+  .submit-wrap { text-align: center; margin-top: 30px; }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--deep-teal), var(--teal));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 50px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(15,76,92,0.3);
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,76,92,0.4); }
+  .btn-submit:active { transform: translateY(0); }
+
+  #answer-key {
+    display: none;
+    background: white;
+    border: 2px solid var(--deep-teal);
+    border-radius: 14px;
+    padding: 24px;
+    margin-top: 30px;
+  }
+  #answer-key h2 {
+    color: var(--deep-teal);
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  #answer-key h3 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: var(--teal);
+    font-size: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px dashed var(--border);
+  }
+  .ak-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eef5f7;
+  }
+  .ak-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--deep-teal);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .ak-content .ak-q { font-size: 13px; color: var(--text-soft); margin-bottom: 4px; }
+  .ak-content .ak-a { font-size: 14px; font-weight: 600; color: var(--success); }
+
+  .score-box {
+    background: linear-gradient(135deg, var(--deep-teal), var(--teal));
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .score-box .score-val { font-size: 48px; font-weight: 800; }
+  .score-box .score-label { font-size: 14px; opacity: 0.85; }
+
+  .segment-section { margin-bottom: 30px; }
+  .segment-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 14px 14px; padding: 16px; background: #f9fcfd; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="study-badge">Research Study / शोध अध्ययन</div>
+  <h1>Effectiveness of Mobile Based Teaching (MBT)<br>on Prevention of Diabetes Complications</h1>
+  <h2>मधुमेह जटिलताओं की रोकथाम पर मोबाइल शिक्षण की प्रभावशीलता</h2>
+  <p class="college-tag">College of Nursing, AHB — First-Degree Relatives Study</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>Progress / प्रगति</span>
+    <span id="prog-text">0 / 20 answered</span>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="segment-nav">
+  <div class="seg-tab active" data-seg="1">🩺 Diabetes</div>
+  <div class="seg-tab" data-seg="2">⚠️ Complications</div>
+  <div class="seg-tab" data-seg="3">🛡️ Prevention</div>
+  <div class="seg-tab" data-seg="4">🔬 Self-Tests</div>
+</div>
+
+<main>
+
+<div class="segment-section" id="seg1">
+  <div class="segment-header">
+    <div class="seg-num">Section 1 of 4</div>
+    <h3>🩺 What is Diabetes? (Sugar Ki Bimari)</h3>
+    <h4>मधुमेह क्या है? (शुगर की बीमारी)</h4>
+  </div>
+  <div class="segment-body">
+
+    <div class="q-card" id="qcard-1">
+      <div class="q-num">1</div>
+      <div class="q-en">What happens in the body when a person has diabetes (sugar disease)?</div>
+      <div class="q-hi">जब किसी को मधुमेह (शुगर की बीमारी) होती है, तो शरीर में क्या होता है?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q1" value="a">
+          <div><div class="opt-text-en">a) Blood has too much sugar</div><div class="opt-text-hi">खून में बहुत ज़्यादा चीनी हो जाती है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q1" value="b">
+          <div><div class="opt-text-en">b) Blood has too little water</div><div class="opt-text-hi">खून में पानी बहुत कम हो जाता है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q1" value="c">
+          <div><div class="opt-text-en">c) Heart beats very fast</div><div class="opt-text-hi">दिल बहुत तेज़ धड़कता है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q1" value="d">
+          <div><div class="opt-text-en">d) Bones become weak</div><div class="opt-text-hi">हड्डियाँ कमज़ोर हो जाती हैं</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-2">
+      <div class="q-num">2</div>
+      <div class="q-en">Which of the following are common warning signs of diabetes? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">मधुमेह के आम लक्षण कौन से हैं? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q2" value="a">
+          <div><div class="opt-text-en">a) Feeling very thirsty all the time</div><div class="opt-text-hi">हर समय बहुत प्यास लगना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q2" value="b">
+          <div><div class="opt-text-en">b) Going to urinate (toilet) very often</div><div class="opt-text-hi">बार-बार पेशाब जाना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q2" value="c">
+          <div><div class="opt-text-en">c) Feeling very tired without much work</div><div class="opt-text-hi">थोड़े काम में ही बहुत थकान लगना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q2" value="d">
+          <div><div class="opt-text-en">d) Hair turns grey</div><div class="opt-text-hi">बाल सफ़ेद हो जाना</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-3">
+      <div class="q-num">3</div>
+      <div class="q-en">Which food makes blood sugar rise very quickly?</div>
+      <div class="q-hi">कौन सा खाना खाने से खून की शुगर बहुत जल्दी बढ़ती है?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q3" value="a">
+          <div><div class="opt-text-en">a) White rice, sweets, and sugary drinks</div><div class="opt-text-hi">सफ़ेद चावल, मिठाई और मीठे पेय</div></div></label>
+        <label class="opt-label"><input type="radio" name="q3" value="b">
+          <div><div class="opt-text-en">b) Green vegetables and salads</div><div class="opt-text-hi">हरी सब्ज़ियाँ और सलाद</div></div></label>
+        <label class="opt-label"><input type="radio" name="q3" value="c">
+          <div><div class="opt-text-en">c) Drinking plain water</div><div class="opt-text-hi">सादा पानी पीना</div></div></label>
+        <label class="opt-label"><input type="radio" name="q3" value="d">
+          <div><div class="opt-text-en">d) Eating roti with dal</div><div class="opt-text-hi">दाल के साथ रोटी खाना</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-4">
+      <div class="q-num">4</div>
+      <div class="q-en">If your mother or father has diabetes, what is YOUR chance of getting it?</div>
+      <div class="q-hi">अगर आपकी माँ या पिताजी को मधुमेह है, तो आपको यह बीमारी होने की कितनी सम्भावना है?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q4" value="a">
+          <div><div class="opt-text-en">a) No chance at all</div><div class="opt-text-hi">बिल्कुल कोई सम्भावना नहीं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q4" value="b">
+          <div><div class="opt-text-en">b) Higher chance than others</div><div class="opt-text-hi">दूसरों से ज़्यादा सम्भावना है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q4" value="c">
+          <div><div class="opt-text-en">c) Only old people get it</div><div class="opt-text-hi">यह बीमारी केवल बुज़ुर्गों को होती है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q4" value="d">
+          <div><div class="opt-text-en">d) Only thin people get it</div><div class="opt-text-hi">यह बीमारी केवल पतले लोगों को होती है</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-5">
+      <div class="q-num">5</div>
+      <div class="q-en">Diabetes is caused mainly because the body does not make or use enough ___?</div>
+      <div class="q-hi">मधुमेह मुख्य रूप से इसलिए होता है क्योंकि शरीर पर्याप्त ___ नहीं बनाता या उपयोग नहीं करता?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q5" value="a">
+          <div><div class="opt-text-en">a) Insulin (a special juice from the body that controls sugar)</div><div class="opt-text-hi">इंसुलिन (शरीर का एक विशेष रस जो शुगर को नियंत्रित करता है)</div></div></label>
+        <label class="opt-label"><input type="radio" name="q5" value="b">
+          <div><div class="opt-text-en">b) Calcium (found in milk)</div><div class="opt-text-hi">कैल्शियम (दूध में पाया जाता है)</div></div></label>
+        <label class="opt-label"><input type="radio" name="q5" value="c">
+          <div><div class="opt-text-en">c) Vitamin C (found in oranges)</div><div class="opt-text-hi">विटामिन सी (संतरे में पाया जाता है)</div></div></label>
+        <label class="opt-label"><input type="radio" name="q5" value="d">
+          <div><div class="opt-text-en">d) Iron (found in green leafy vegetables)</div><div class="opt-text-hi">आयरन (हरी पत्तेदार सब्ज़ियों में पाया जाता है)</div></div></label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="segment-section" id="seg2">
+  <div class="segment-header" style="background: linear-gradient(135deg, #8b1a1a, #c0392b);">
+    <div class="seg-num">Section 2 of 4</div>
+    <h3>⚠️ Dangers of Uncontrolled Sugar (Complications)</h3>
+    <h4>बेकाबू शुगर के खतरे (जटिलताएँ / Complications)</h4>
+  </div>
+  <div class="segment-body">
+
+    <div class="q-card" id="qcard-6">
+      <div class="q-num">6</div>
+      <div class="q-en">If diabetes is not controlled for a long time, which body parts can get damaged? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">अगर लम्बे समय तक मधुमेह को काबू नहीं किया गया, तो शरीर के कौन से अंग खराब हो सकते हैं? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q6" value="a">
+          <div><div class="opt-text-en">a) Eyes — may lose eyesight</div><div class="opt-text-hi">आँखें — नज़र कमज़ोर या बंद हो सकती है</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q6" value="b">
+          <div><div class="opt-text-en">b) Kidneys — may stop working (need dialysis)</div><div class="opt-text-hi">गुर्दे — काम करना बंद कर सकते हैं (डायलिसिस की ज़रूरत)</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q6" value="c">
+          <div><div class="opt-text-en">c) Feet — sores that don't heal, may need amputation</div><div class="opt-text-hi">पैर — घाव जो ठीक नहीं होते, पैर काटना पड़ सकता है</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q6" value="d">
+          <div><div class="opt-text-en">d) Fingernails — they become stronger</div><div class="opt-text-hi">नाखून — वे मज़बूत हो जाते हैं</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-7">
+      <div class="q-num">7</div>
+      <div class="q-en">A diabetic person has a small cut on the foot and it is not healing even after 2 weeks. What should be done?</div>
+      <div class="q-hi">एक मधुमेह रोगी के पैर में छोटा घाव है और 2 हफ्तों बाद भी ठीक नहीं हो रहा। क्या करना चाहिए?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q7" value="a">
+          <div><div class="opt-text-en">a) Ignore it — it will heal on its own</div><div class="opt-text-hi">नज़रअंदाज़ करें — अपने आप ठीक हो जाएगा</div></div></label>
+        <label class="opt-label"><input type="radio" name="q7" value="b">
+          <div><div class="opt-text-en">b) Go to the doctor immediately</div><div class="opt-text-hi">तुरंत डॉक्टर के पास जाएं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q7" value="c">
+          <div><div class="opt-text-en">c) Put turmeric and wait for a month</div><div class="opt-text-hi">हल्दी लगाएं और एक महीना इंतज़ार करें</div></div></label>
+        <label class="opt-label"><input type="radio" name="q7" value="d">
+          <div><div class="opt-text-en">d) Rub the wound harder to help it heal</div><div class="opt-text-hi">घाव को ज़ोर से रगड़ें ताकि ठीक हो जाए</div></div></label>
+      </div>
+    </div> 
+
+    <div class="q-card" id="qcard-8">
+      <div class="q-num">8</div>
+      <div class="q-en">Diabetes can also damage the heart. Which warning signs of heart trouble should a diabetic person watch for? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">मधुमेह दिल को भी नुकसान पहुँचा सकता है। मधुमेह रोगी को दिल की परेशानी के कौन से संकेत देखने चाहिए? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q8" value="a">
+          <div><div class="opt-text-en">a) Chest pain or chest pressure</div><div class="opt-text-hi">सीने में दर्द या भारीपन</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q8" value="b">
+          <div><div class="opt-text-en">b) Shortness of breath (feeling like no air)</div><div class="opt-text-hi">सांस फूलना (ऐसा लगना कि हवा नहीं मिल रही)</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q8" value="c">
+          <div><div class="opt-text-en">c) Sudden sweating and dizziness</div><div class="opt-text-hi">अचानक पसीना आना और चक्कर आना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q8" value="d">
+          <div><div class="opt-text-en">d) Feeling hungry after eating</div><div class="opt-text-hi">खाना खाने के बाद भूख लगना</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-9">
+      <div class="q-num">9</div>
+      <div class="q-en">Why do diabetic people sometimes feel numbness (soo-soo / jhannahat) or burning in their feet?</div>
+      <div class="q-hi">मधुमेह रोगियों के पैरों में कभी-कभी सुन्नपन (सू-सू / झनझनाहट) या जलन क्यों होती है?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q9" value="a">
+          <div><div class="opt-text-en">a) Because high sugar damages the nerves (nadi/taar) of the body</div><div class="opt-text-hi">क्योंकि ज़्यादा शुगर से शरीर की नसें (नाड़ी/तार) खराब हो जाती हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q9" value="b">
+          <div><div class="opt-text-en">b) Because they walk too much</div><div class="opt-text-hi">क्योंकि वे बहुत ज़्यादा चलते हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q9" value="c">
+          <div><div class="opt-text-en">c) Because they wear tight shoes</div><div class="opt-text-hi">क्योंकि वे तंग जूते पहनते हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q9" value="d">
+          <div><div class="opt-text-en">d) Because of cold weather only</div><div class="opt-text-hi">केवल ठंड के मौसम की वजह से</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-10">
+      <div class="q-num">10</div>
+      <div class="q-en">Blurred vision (dhundhla dikhna) in a diabetic person can mean — ?</div>
+      <div class="q-hi">मधुमेह रोगी को धुंधला दिखना इसका मतलब हो सकता है — ?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q10" value="a">
+          <div><div class="opt-text-en">a) They need glasses only</div><div class="opt-text-hi">उन्हें सिर्फ चश्मे की ज़रूरत है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q10" value="b">
+          <div><div class="opt-text-en">b) High sugar may be damaging their eye blood vessels — see a doctor</div><div class="opt-text-hi">ज़्यादा शुगर से आँख की रक्त नलियाँ खराब हो सकती हैं — डॉक्टर को दिखाएं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q10" value="c">
+          <div><div class="opt-text-en">c) They are watching too much TV</div><div class="opt-text-hi">वे बहुत ज़्यादा टीवी देखते हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q10" value="d">
+          <div><div class="opt-text-en">d) It happens only in children, not adults</div><div class="opt-text-hi">यह केवल बच्चों में होता है, बड़ों में नहीं</div></div></label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="segment-section" id="seg3">
+  <div class="segment-header" style="background: linear-gradient(135deg, #1a5e3a, #27ae60);">
+    <div class="seg-num">Section 3 of 4</div>
+    <h3>🛡️ How to Stay Safe from Complications?</h3>
+    <h4>जटिलताओं से कैसे बचें? (रोकथाम / Prevention)</h4>
+  </div>
+  <div class="segment-body">
+
+    <div class="q-card" id="qcard-11">
+      <div class="q-num">11</div>
+      <div class="q-en">Which of the following habits help to keep blood sugar under control? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">निम्न में से कौन सी आदतें खून की शुगर को काबू में रखने में मदद करती हैं? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q11" value="a">
+          <div><div class="opt-text-en">a) Daily walk or exercise (even 30 minutes)</div><div class="opt-text-hi">रोज़ चलना या व्यायाम (कम से कम 30 मिनट)</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q11" value="b">
+          <div><div class="opt-text-en">b) Eating less sugary and oily food</div><div class="opt-text-hi">कम मीठा और कम तेल वाला खाना खाना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q11" value="c">
+          <div><div class="opt-text-en">c) Taking medicines on time every day</div><div class="opt-text-hi">हर दिन सही समय पर दवाई लेना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q11" value="d">
+          <div><div class="opt-text-en">d) Sleeping all day and avoiding movement</div><div class="opt-text-hi">पूरे दिन सोते रहना और हिलना-डुलना बंद करना</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-12">
+      <div class="q-num">12</div>
+      <div class="q-en">A diabetic person should check their feet every day. Why?</div>
+      <div class="q-hi">मधुमेह रोगी को हर रोज़ अपने पैरों की जाँच करनी चाहिए। क्यों?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q12" value="a">
+          <div><div class="opt-text-en">a) To check if feet are clean only</div><div class="opt-text-hi">केवल यह देखने के लिए कि पैर साफ हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q12" value="b">
+          <div><div class="opt-text-en">b) Because they can't feel small cuts/sores due to nerve damage — early treatment prevents big wounds</div><div class="opt-text-hi">क्योंकि नसें खराब होने से छोटे घाव महसूस नहीं होते — जल्दी इलाज बड़े घावों से बचाता है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q12" value="c">
+          <div><div class="opt-text-en">c) To make feet look beautiful</div><div class="opt-text-hi">पैरों को सुंदर दिखाने के लिए</div></div></label>
+        <label class="opt-label"><input type="radio" name="q12" value="d">
+          <div><div class="opt-text-en">d) Doctor told them to do it for no reason</div><div class="opt-text-hi">डॉक्टर ने बिना किसी कारण के यह कहा</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-13">
+      <div class="q-num">13</div>
+      <div class="q-en">How often should a diabetic person visit the eye doctor (aankh ka doctor)?</div>
+      <div class="q-hi">मधुमेह रोगी को आँख के डॉक्टर के पास कितनी बार जाना चाहिए?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q13" value="a">
+          <div><div class="opt-text-en">a) Only when vision becomes completely blurred</div><div class="opt-text-hi">केवल तब जब दृष्टि पूरी तरह धुंधली हो जाए</div></div></label>
+        <label class="opt-label"><input type="radio" name="q13" value="b">
+          <div><div class="opt-text-en">b) At least once every year, even if eyes seem fine</div><div class="opt-text-hi">साल में कम से कम एक बार, भले ही आँखें ठीक लगें</div></div></label>
+        <label class="opt-label"><input type="radio" name="q13" value="c">
+          <div><div class="opt-text-en">c) Never — eye problems are not related to diabetes</div><div class="opt-text-hi">कभी नहीं — आँख की समस्याएं मधुमेह से संबंधित नहीं हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q13" value="d">
+          <div><div class="opt-text-en">d) Only once in a lifetime</div><div class="opt-text-hi">जीवन में केवल एक बार</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-14">
+      <div class="q-num">14</div>
+      <div class="q-en">Which foods are BETTER choices for a diabetic person to eat regularly? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">मधुमेह रोगी के लिए नियमित रूप से खाने के लिए कौन से खाद्य पदार्थ बेहतर विकल्प हैं? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q14" value="a">
+          <div><div class="opt-text-en">a) Green vegetables (palak, lauki, karela)</div><div class="opt-text-hi">हरी सब्ज़ियाँ (पालक, लौकी, करेला)</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q14" value="b">
+          <div><div class="opt-text-en">b) Whole grain roti (atta roti, bajra roti)</div><div class="opt-text-hi">साबुत अनाज की रोटी (आटे की रोटी, बाजरे की रोटी)</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q14" value="c">
+          <div><div class="opt-text-en">c) Cold drinks and packaged juices</div><div class="opt-text-hi">कोल्ड ड्रिंक्स और पैकेट वाले जूस</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q14" value="d">
+          <div><div class="opt-text-en">d) Lentils and dal (moong, masoor)</div><div class="opt-text-hi">दाल (मूंग, मसूर)</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-15">
+      <div class="q-num">15</div>
+      <div class="q-en">Stopping smoking (bidi/cigarette) helps a diabetic person because — ?</div>
+      <div class="q-hi">धूम्रपान (बीड़ी/सिगरेट) बंद करने से मधुमेह रोगी को फायदा होता है क्योंकि — ?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q15" value="a">
+          <div><div class="opt-text-en">a) Smoking reduces blood flow to feet and heart, making complications worse</div><div class="opt-text-hi">धूम्रपान पैरों और दिल में खून का बहाव कम करता है, जिससे जटिलताएँ बढ़ती हैं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q15" value="b">
+          <div><div class="opt-text-en">b) Smoking has no relation with diabetes</div><div class="opt-text-hi">धूम्रपान का मधुमेह से कोई संबंध नहीं है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q15" value="c">
+          <div><div class="opt-text-en">c) Smoking controls blood sugar levels</div><div class="opt-text-hi">धूम्रपान खून की शुगर को नियंत्रित करता है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q15" value="d">
+          <div><div class="opt-text-en">d) Smoking only harms the lungs, not diabetes</div><div class="opt-text-hi">धूम्रपान केवल फेफड़ों को नुकसान पहुँचाता है, मधुमेह को नहीं</div></div></label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="segment-section" id="seg4">
+  <div class="segment-header" style="background: linear-gradient(135deg, #4a1a6e, #7d3c98);">
+    <div class="seg-num">Section 4 of 4</div>
+    <h3>🔬 Home Tests to Monitor Diabetes (Khud Karne Wali Jaanch)</h3>
+    <h4>मधुमेह की निगरानी के लिए घरेलू जाँचें (खुद करने वाली जाँच)</h4>
+  </div>
+  <div class="segment-body">
+
+    <div class="q-card" id="qcard-16">
+      <div class="q-num">16</div>
+      <div class="q-en">A glucometer (sugar testing machine at home) is used for — ?</div>
+      <div class="q-hi">ग्लूकोमीटर (घर पर शुगर जाँचने की मशीन) का उपयोग किस लिए होता है?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q16" value="a">
+          <div><div class="opt-text-en">a) Checking blood sugar levels at home using a drop of blood from the finger</div><div class="opt-text-hi">उंगली के खून की एक बूंद से घर पर खून की शुगर जाँचने के लिए</div></div></label>
+        <label class="opt-label"><input type="radio" name="q16" value="b">
+          <div><div class="opt-text-en">b) Measuring blood pressure</div><div class="opt-text-hi">रक्तचाप (ब्लड प्रेशर) मापने के लिए</div></div></label>
+        <label class="opt-label"><input type="radio" name="q16" value="c">
+          <div><div class="opt-text-en">c) Checking body temperature (fever)</div><div class="opt-text-hi">शरीर का तापमान (बुखार) जाँचने के लिए</div></div></label>
+        <label class="opt-label"><input type="radio" name="q16" value="d">
+          <div><div class="opt-text-en">d) Counting heartbeats</div><div class="opt-text-hi">दिल की धड़कन गिनने के लिए</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-17">
+      <div class="q-num">17</div>
+      <div class="q-en">What is the normal fasting blood sugar (sugar checked before eating anything in the morning)?</div>
+      <div class="q-hi">सामान्य उपवास रक्त शर्करा क्या होती है? (सुबह कुछ खाने से पहले की शुगर)</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q17" value="a">
+          <div><div class="opt-text-en">a) Less than 100 mg/dL (normal range)</div><div class="opt-text-hi">100 mg/dL से कम (सामान्य सीमा)</div></div></label>
+        <label class="opt-label"><input type="radio" name="q17" value="b">
+          <div><div class="opt-text-en">b) 300 mg/dL or more</div><div class="opt-text-hi">300 mg/dL या उससे अधिक</div></div></label>
+        <label class="opt-label"><input type="radio" name="q17" value="c">
+          <div><div class="opt-text-en">c) 500 mg/dL</div><div class="opt-text-hi">500 mg/dL</div></div></label>
+        <label class="opt-label"><input type="radio" name="q17" value="d">
+          <div><div class="opt-text-en">d) It doesn't matter what the number is</div><div class="opt-text-hi">यह कोई मायने नहीं रखता कि संख्या क्या है</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-18">
+      <div class="q-num">18</div>
+      <div class="q-en">Which of the following are signs that blood sugar has fallen TOO LOW (sugar giri hui)? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">निम्न में से कौन से संकेत बताते हैं कि खून की शुगर बहुत नीचे गिर गई है? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q18" value="a">
+          <div><div class="opt-text-en">a) Sudden sweating, shaking/trembling of hands</div><div class="opt-text-hi">अचानक पसीना आना, हाथ काँपना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q18" value="b">
+          <div><div class="opt-text-en">b) Feeling confused or not able to think clearly</div><div class="opt-text-hi">उलझन महसूस होना या साफ सोच न पाना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q18" value="c">
+          <div><div class="opt-text-en">c) Feeling very hungry suddenly</div><div class="opt-text-hi">अचानक बहुत तेज़ भूख लगना</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q18" value="d">
+          <div><div class="opt-text-en">d) Hair starts falling</div><div class="opt-text-hi">बाल झड़ने लगते हैं</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-19">
+      <div class="q-num">19</div>
+      <div class="q-en">What is HbA1c test (Teene Mahine ki Shugr Jaanch)? Why is it important?</div>
+      <div class="q-hi">HbA1c जाँच (तीने महीने की शुगर जाँच) क्या है? यह क्यों ज़रूरी है?</div>
+      <div class="options">
+        <label class="opt-label"><input type="radio" name="q19" value="a">
+          <div><div class="opt-text-en">a) It shows the average blood sugar of the last 3 months — helps know if sugar is well-controlled over time</div><div class="opt-text-hi">यह पिछले 3 महीनों की औसत रक्त शर्करा दिखाता है — यह जानने में मदद करता है कि लम्बे समय में शुगर कितनी नियंत्रित है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q19" value="b">
+          <div><div class="opt-text-en">b) It checks if the kidneys are working</div><div class="opt-text-hi">यह जाँचता है कि गुर्दे काम कर रहे हैं या नहीं</div></div></label>
+        <label class="opt-label"><input type="radio" name="q19" value="c">
+          <div><div class="opt-text-en">c) It measures blood pressure over 3 months</div><div class="opt-text-hi">यह 3 महीनों में रक्तचाप मापता है</div></div></label>
+        <label class="opt-label"><input type="radio" name="q19" value="d">
+          <div><div class="opt-text-en">d) It is only done in hospitals, not useful for home monitoring</div><div class="opt-text-hi">यह केवल अस्पताल में होता है, घर पर निगरानी के लिए उपयोगी नहीं है</div></div></label>
+      </div>
+    </div>
+
+    <div class="q-card" id="qcard-20">
+      <div class="q-num">20</div>
+      <div class="q-en">When should a person with diabetes (or someone at risk) measure their blood sugar at home? <strong>(Select all that apply)</strong></div>
+      <div class="q-hi">मधुमेह वाले व्यक्ति (या जिसे खतरा है) को घर पर कब शुगर मापनी चाहिए? <strong>(जो सही हों सभी चुनें)</strong></div>
+      <div class="multi-hint">✓ Select Multiple / एक से अधिक चुनें</div>
+      <div class="options">
+        <label class="opt-label"><input type="checkbox" name="q20" value="a">
+          <div><div class="opt-text-en">a) In the morning before breakfast (to know fasting sugar)</div><div class="opt-text-hi">सुबह नाश्ते से पहले (उपवास की शुगर जानने के लिए)</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q20" value="b">
+          <div><div class="opt-text-en">b) 2 hours after eating a meal</div><div class="opt-text-hi">खाना खाने के 2 घंटे बाद</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q20" value="c">
+          <div><div class="opt-text-en">c) When feeling shaky, dizzy, or unwell</div><div class="opt-text-hi">जब काँपन, चक्कर या तबीयत ठीक न हो</div></div></label>
+        <label class="opt-label"><input type="checkbox" name="q20" value="d">
+          <div><div class="opt-text-en">d) Only when the doctor specifically says so, never otherwise</div><div class="opt-text-hi">केवल तब जब डॉक्टर कहे, इसके अलावा कभी नहीं</div></div></label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="submit-wrap">
+  <button class="btn-submit" onclick="submitQuestionnaire()">
+    ✅ Submit & See Answers / जमा करें और उत्तर देखें
+  </button>
+</div>
+
+<div id="answer-key">
+  <div class="score-box">
+    <div class="score-val" id="score-val">–</div>
+    <div class="score-label">out of 20 questions answered correctly / 20 में से सही उत्तर</div>
+  </div>
+  <h2>📋 Answer Key / उत्तर कुंजी</h2>
+  <h3>सभी सही उत्तर नीचे दिए गए हैं</h3>
+  <div id="ak-list"></div>
+</div>
+
+</main>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const PARTICIPANT_ID = urlParams.get('pid') || localStorage.getItem('currentParticipantId') || 'UNKNOWN';
+const TEST_PHASE = window.location.pathname.toLowerCase().includes('posttest') ? 'posttest' : 'pretest';
+
+// ===== GOOGLE SHEETS WEB APP URL =====
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx7vHvYPrreCoWfUCzTaMdXJK-3b64H0l9rmJTDpXjmU2modypiEHsSqPo8d5rq7F9H/exec";
+
+function sendToSheet(payload) {
+  fetch(SHEET_WEBAPP_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(payload)
+  }).catch(err => console.error("Sheet sync error:", err));
+}
+
+const ANSWERS = {
+  q1:  { correct: ['a'], type: 'single', en: "a) Blood has too much sugar", hi: "खून में बहुत ज़्यादा चीनी हो जाती है" },
+  q2:  { correct: ['a','b','c'], type: 'multi', en: "a) Very thirsty, b) Frequent urination, c) Tiredness", hi: "बहुत प्यास, बार-बार पेशाब, थकान" },
+  q3:  { correct: ['a'], type: 'single', en: "a) White rice, sweets, and sugary drinks", hi: "सफ़ेद चावल, मिठाई और मीठे पेय" },
+  q4:  { correct: ['b'], type: 'single', en: "b) Higher chance than others", hi: "दूसरों से ज़्यादा सम्भावना है" },
+  q5:  { correct: ['a'], type: 'single', en: "a) Insulin", hi: "इंसुलिन" },
+  q6:  { correct: ['a','b','c'], type: 'multi', en: "a) Eyes, b) Kidneys, c) Feet", hi: "आँखें, गुर्दे, पैर" },
+  q7:  { correct: ['b'], type: 'single', en: "b) Go to the doctor immediately", hi: "तुरंत डॉक्टर के पास जाएं" },
+  q8:  { correct: ['a','b','c'], type: 'multi', en: "a) Chest pain, b) Shortness of breath, c) Sweating & dizziness", hi: "सीने में दर्द, सांस फूलना, पसीना व चक्कर" },
+  q9:  { correct: ['a'], type: 'single', en: "a) High sugar damages the nerves", hi: "ज़्यादा शुगर से नसें खराब हो जाती हैं" },
+  q10: { correct: ['b'], type: 'single', en: "b) High sugar may be damaging eye blood vessels — see doctor", hi: "ज़्यादा शुगर से आँख की रक्त नलियाँ खराब हो सकती हैं" },
+  q11: { correct: ['a','b','c'], type: 'multi', en: "a) Exercise, b) Less sugar/oily food, c) Medicines on time", hi: "व्यायाम, कम मीठा/तेल वाला खाना, समय पर दवाई" },
+  q12: { correct: ['b'], type: 'single', en: "b) Can't feel small cuts due to nerve damage — early treatment prevents big wounds", hi: "नसें खराब होने से छोटे घाव महसूस नहीं होते — जल्दी इलाज ज़रूरी है" },
+  q13: { correct: ['b'], type: 'single', en: "b) At least once every year even if eyes seem fine", hi: "साल में कम से कम एक बार, भले ही आँखें ठीक लगें" },
+  q14: { correct: ['a','b','d'], type: 'multi', en: "a) Green vegetables, b) Whole grain roti, d) Dal/lentils", hi: "हरी सब्ज़ियाँ, साबुत अनाज की रोटी, दाल" },
+  q15: { correct: ['a'], type: 'single', en: "a) Smoking reduces blood flow to feet and heart, making complications worse", hi: "धूम्रपान पैरों और दिल में खून का बहाव कम करता है, जटिलताएँ बढ़ती हैं" },
+  q16: { correct: ['a'], type: 'single', en: "a) Checking blood sugar at home using a drop of blood from finger", hi: "उंगली के खून की एक बूंद से घर पर शुगर जाँचना" },
+  q17: { correct: ['a'], type: 'single', en: "a) Less than 100 mg/dL (normal fasting)", hi: "100 mg/dL से कम (सामान्य उपवास)" },
+  q18: { correct: ['a','b','c'], type: 'multi', en: "a) Sweating/trembling, b) Confusion, c) Sudden hunger", hi: "पसीना/काँपना, उलझन, अचानक भूख" },
+  q19: { correct: ['a'], type: 'single', en: "a) Shows average blood sugar of last 3 months", hi: "पिछले 3 महीनों की औसत रक्त शर्करा दिखाता है" },
+  q20: { correct: ['a','b','c'], type: 'multi', en: "a) Morning before breakfast, b) 2 hrs after eating, c) When feeling unwell", hi: "नाश्ते से पहले, खाने के 2 घंटे बाद, तबीयत ठीक न हो" }
+};
+
+const Q_LABELS = {
+  q1:"What happens in the body with diabetes?", q2:"Common warning signs of diabetes",
+  q3:"Which food raises blood sugar quickly?", q4:"Chance of diabetes if parent has it?",
+  q5:"Diabetes is caused by lack of ___?", q6:"Which body parts get damaged by uncontrolled diabetes?",
+  q7:"Non-healing foot wound — what to do?", q8:"Warning signs of heart trouble in diabetics",
+  q9:"Why numbness/burning in feet?", q10:"What does blurred vision in diabetics mean?",
+  q11:"Habits that help control blood sugar", q12:"Why check feet daily?",
+  q13:"How often to visit eye doctor?", q14:"Better food choices for diabetics",
+  q15:"Why stop smoking with diabetes?", q16:"What is glucometer used for?",
+  q17:"Normal fasting blood sugar level?", q18:"Signs of blood sugar too low",
+  q19:"What is HbA1c test?", q20:"When to measure blood sugar at home?"
+};
+
+function getSelected(name, type) {
+  if (type === 'single') {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? [el.value] : [];
+  } else {
+    const els = document.querySelectorAll(`input[name="${name}"]:checked`);
+    return Array.from(els).map(e => e.value);
+  }
+}
+
+function arraysMatch(a, b) {
+  return a.sort().join() === b.sort().join();
+}
+
+function updateProgress() {
+  let answered = 0;
+  for (let i = 1; i <= 20; i++) {
+    const q = `q${i}`;
+    const ans = ANSWERS[q];
+    const sel = getSelected(q, ans.type);
+    if (sel.length > 0) answered++;
+    const card = document.getElementById(`qcard-${i}`);
+    card.classList.toggle('answered', sel.length > 0);
+  }
+  document.getElementById('prog-text').textContent = `${answered} / 20 answered`;
+  document.getElementById('prog-fill').style.width = (answered / 20 * 100) + '%';
+}
+
+document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(el => {
+  el.addEventListener('change', () => {
+    const name = el.name;
+    const type = el.type;
+    if (type === 'radio') {
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.opt-label').classList.toggle('selected', r.checked);
+      });
+    } else {
+      el.closest('.opt-label').classList.toggle('selected', el.checked);
+    }
+    updateProgress();
+  });
+});
+
+function submitQuestionnaire() {
+  let score = 0;
+  const akList = document.getElementById('ak-list');
+  akList.innerHTML = '';
+  const collectedAnswers = {};
+
+  for (let i = 1; i <= 20; i++) {
+    const q = `q${i}`;
+    const ans = ANSWERS[q];
+    const sel = getSelected(q, ans.type);
+    const correct = arraysMatch(sel, ans.correct);
+    if (correct) score++;
+    collectedAnswers[q] = sel;
+
+    const div = document.createElement('div');
+    div.className = 'ak-item';
+    div.innerHTML = `
+      <div class="ak-num">${i}</div>
+      <div class="ak-content">
+        <div class="ak-q">${Q_LABELS[q]}</div>
+        <div class="ak-a">${correct ? '✅' : '❌'} ${ans.en}</div>
+        <div style="font-family:'Noto Sans Devanagari',sans-serif; font-size:13px; color:#27ae60; margin-top:2px;">${ans.hi}</div>
+      </div>`;
+    akList.appendChild(div);
+  }
+
+  document.getElementById('score-val').textContent = `${score}/20`;
+  const keyEl = document.getElementById('answer-key');
+  keyEl.style.display = 'block';
+  keyEl.scrollIntoView({ behavior: 'smooth' });
+
+  sendToSheet({
+    type: 'test',
+    action: 'test',
+    participantId: PARTICIPANT_ID,
+    testPhase: TEST_PHASE,
+    score: score,
+    answers: collectedAnswers
+  });
+}
+
+document.querySelectorAll('.seg-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const seg = tab.dataset.seg;
+    document.getElementById(`seg${seg}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
